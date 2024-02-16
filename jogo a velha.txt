@@ -1,0 +1,74 @@
+import java.util.Scanner
+
+fun main() {
+    val scanner = Scanner(System.`in`)
+    val board = Array(3) { arrayOf("-", "-", "-") }
+    var currentPlayer = "Mario"
+
+    println("Bem-vindo ao Jogo da Velha do Mario!")
+    printBoard(board)
+
+    while (true) {
+        println("$currentPlayer, é sua vez. Escolha uma linha (0-2) e uma coluna (0-2):")
+        val row = scanner.nextInt()
+        val col = scanner.nextInt()
+
+        if (row !in 0..2 || col !in 0..2 || board[row][col] != "-") {
+            println("Movimento inválido. Tente novamente.")
+            continue
+        }
+
+        board[row][col] = if (currentPlayer == "Mario") "M" else "L"
+        printBoard(board)
+
+        if (checkWin(board, currentPlayer)) {
+            println("$currentPlayer venceu! Parabéns!")
+            break
+        } else if (isBoardFull(board)) {
+            println("Empate!")
+            break
+        }
+
+        currentPlayer = if (currentPlayer == "Mario") "Luigi" else "Mario"
+    }
+}
+
+fun printBoard(board: Array<Array<String>>) {
+    println("  0 1 2")
+    for (i in board.indices) {
+        print("$i ")
+        for (j in board[i].indices) {
+            print("${board[i][j]} ")
+        }
+        println()
+    }
+}
+
+fun checkWin(board: Array<Array<String>>, player: String): Boolean {
+    for (i in 0..2) {
+        if (board[i][0] == player && board[i][1] == player && board[i][2] == player) {
+            return true
+        }
+        if (board[0][i] == player && board[1][i] == player && board[2][i] == player) {
+            return true
+        }
+    }
+    if (board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+        return true
+    }
+    if (board[0][2] == player && board[1][1] == player && board[2][0] == player) {
+        return true
+    }
+    return false
+}
+
+fun isBoardFull(board: Array<Array<String>>): Boolean {
+    for (row in board) {
+        for (cell in row) {
+            if (cell == "-") {
+                return false
+            }
+        }
+    }
+    return true
+}
